@@ -1,6 +1,9 @@
 #include <string.h>
 #include <conio.h>
+#include <row.h>
+#include <list.h>
 #include <iostream>
+
 using namespace std;
 
 const int maxSize = 10;
@@ -41,7 +44,7 @@ istream &input (int &a)
 
          cin.ignore();
          return cin;
-};
+}
 
 int inputNatural()
 {
@@ -54,222 +57,8 @@ int inputNatural()
     }while (n<=0);
 
     return n;
-};
+}
 
-///////////////////
-// Structs
-///////////////////
-struct Item
-{
-       protected:
-           char* info;
-           int infoLength;
-
-       public:
-           int key;
-           int release;
-
-           void setInfo(char* value)
-           {
-                info = value;
-                infoLength = strlen(info);
-           };
-
-           char* getInfo()
-           {
-                return info;
-           };
-
-
-           Item()
-           {
-                key = 0;
-                release = 0;
-                info = NULL;
-           };
-
-           Item( int newKey )
-           {
-                key = newKey;
-                release = 0;
-                setInfo(NULL);
-           };
-
-           Item( int newKey, int newRelease)
-           {
-                key = newKey;
-                release = newRelease;
-                setInfo(NULL);
-           };
-
-           Item( int newKey, int newRelease, char* newInfo)
-           {
-                key = newKey;
-                release = newRelease;
-                setInfo(newInfo);
-           };
-
-           void Clear()
-           {
-                delete [] info;
-           }
-};
-
-struct List
-{
-       int maxLength;
-       int length;
-       Item *source;
-
-       int maxRelease()
-       {
-            int returnValue = -1;
-
-            for (int i = 0; i < length; i++)
-            {
-                if (i == 0)
-                {
-                    returnValue = source[i].release;
-                }else
-                {
-                    if (returnValue < source[i].release) returnValue = source[i].release;
-                }
-            }
-
-            return returnValue;
-       }
-
-       List()
-       {
-             maxLength = 0;
-             length = 0;
-             source = new Item[0];
-       }
-
-       List(int newMaxLength)
-       {
-            maxLength = newMaxLength;
-            length = 0;
-            source = new Item[newMaxLength];
-       }
-
-       List* Search(Item *value, bool equal=true)
-       {
-            List *returnValue = new List(maxLength);
-
-            for (int i = 0; i < length; i++)
-            {
-                if (equal)
-                {
-                    if (source[i].key == value->key)
-                    {
-                       if (value->release > 0)
-                       {
-                            if (source[i].release == value->release) returnValue->Add(&source[i]);
-                       }else
-                       {
-                            returnValue->Add(&source[i]);
-                       }
-                    }
-                }else
-                {
-                    if (source[i].key != value->key)
-                    {
-                       returnValue->Add(&source[i]);
-                    } else
-                    {
-                       if (value->release > 0 && source[i].release != value->release)
-                          returnValue->Add(&source[i]);
-                    }
-                }
-            }
-
-            return returnValue;
-       }
-
-       const char* Add(Item *value, bool recalculateRelease = true)
-       {
-            if (length == maxLength)
-               return "Maximum reached!";
-
-            if (Search(value)->length > 0)
-               return "Item is already consists!";
-
-            source[length] = *value;
-            length++;
-
-            Sort();
-
-            return "";
-       }
-
-
-       const char* Delete( Item *itemSearch )
-       {
-            List* excludedList = Search(itemSearch, false);
-
-            if (excludedList->length == length)
-               return "No elements found!";
-
-            source = excludedList->source;
-            length = excludedList->length;
-
-            Sort();
-
-            return "";
-       }
-
-
-       const char* Delete( int key )
-       {
-            return Delete(new Item(key));
-       }
-
-
-       const char* Delete( int key, int release )
-       {
-            return Delete(new Item(key, release));
-       }
-
-       void Sort()
-       {
-            if (length < 2) return;
-            Item tmp;
-
-            for (int i = 0; i < length-1; i++)
-            {
-                if (source[i].key > source[i+1].key)
-                {
-                    tmp = source[i];
-                    source[i] = source[i+1];
-                    source[i+1] = tmp;
-                }
-            }
-       }
-
-       const char* Print()
-       {
-            cout<<"Key"<<"\t"<<"Release"<<"\t"<<"Information"<<endl;
-            for (int i = 0; i < length; i++)
-            {
-                cout<<source[i].key<<"\t"<<source[i].release<<"\t"<<source[i].getInfo()<<endl;
-            }
-
-            return "";
-       }
-
-       const char* Clear()
-       {
-            for (int i = 0; i < length; i++)
-            {
-                source[i].Clear();
-            }
-
-            length = 0;
-
-            return "";
-       }
-};
 ///////////////////
 // Menu operations
 ///////////////////
@@ -290,21 +79,21 @@ const char* AddMenuClick(List *list)
     int key, release;
     char *info;
 
-    Item *newItem = new Item();
+    Row *newRow = new Row();
 
     cout<< "Enter key: ";
     input(key);
-    newItem->key = key;
+    newRow->key = key;
 
-    newItem->release = list->Search(newItem)->maxRelease() + 1;
-    cout<< "Release would be: "<< newItem->release<< endl;
+    newRow->release = list->Search(newRow)->maxRelease() + 1;
+    cout<< "Release would be: "<< newRow->release<< endl;
 
     cout<< "Enter info: ";
     input(info);
     //cin >> info;
-    newItem->setInfo(info);
+    newRow->setInfo(info);
 
-    return (list->Add(newItem));
+    return (list->Add(newRow));
 }
 
 const char* DeleteMenuClick(List *list)
