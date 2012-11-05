@@ -16,13 +16,13 @@ public:
 
     List* Search(Row *value, bool equal = true);
 
-    const char* Add(Row *value, bool recalculateRelease = true);
+    const char* operator+=(Row *value );
 
-    const char* Delete( Row *rowSearch );
+    const char* operator-=( int key );
 
-    const char* Delete( int key );
+    ostream operator<<(List *list);
 
-    const char* Delete( int key, int release );
+    Row* operator()(Row *value);
 
     void Sort();
 

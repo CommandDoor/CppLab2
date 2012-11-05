@@ -12,7 +12,7 @@ protected:
 
 public:
     int key;
-    int release;
+    int busy;
 
     void setInfo(char* value);
 
@@ -22,9 +22,7 @@ public:
 
     Row( int newKey );
 
-    Row( int newKey, int newRelease);
-
-    Row( int newKey, int newRelease, char* newInfo);
+    Row( int newKey, char* newInfo);
 
     void Clear();
 };

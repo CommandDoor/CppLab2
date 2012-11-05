@@ -76,7 +76,7 @@ int Menu ()
 
 const char* AddMenuClick(List *list)
 {
-    int key, release;
+    int key;
     char *info;
 
     Row *newRow = new Row();
@@ -85,31 +85,20 @@ const char* AddMenuClick(List *list)
     input(key);
     newRow->key = key;
 
-    newRow->release = list->Search(newRow)->maxRelease() + 1;
-    cout<< "Release would be: "<< newRow->release<< endl;
-
     cout<< "Enter info: ";
     input(info);
     //cin >> info;
     newRow->setInfo(info);
 
-    return (list->Add(newRow));
+    return (*list+=newRow);
 }
 
 const char* DeleteMenuClick(List *list)
 {
-    int key, release;
+    int key;
     cout<< "Enter key: ";
     input(key);
-    cout<< "Enter release: ";
-    input(release);
-    if (release > 0)
-    {
-       return (list->Delete(key, release));
-    }else
-    {
-       return (list->Delete(key));
-    }
+    return (*list-=key);
 }
 
 const char* ClearMenuClick(List *list) //пункт 3

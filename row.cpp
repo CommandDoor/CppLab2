@@ -19,28 +19,18 @@ char* Row::getInfo()
 Row::Row()
 {
     key = 0;
-    release = 0;
     info = NULL;
 }
 
 Row::Row( int newKey )
 {
     key = newKey;
-    release = 0;
     setInfo(NULL);
 }
 
-Row::Row( int newKey, int newRelease)
+Row::Row( int newKey, char* newInfo)
 {
     key = newKey;
-    release = newRelease;
-    setInfo(NULL);
-}
-
-Row::Row( int newKey, int newRelease, char* newInfo)
-{
-    key = newKey;
-    release = newRelease;
     setInfo(newInfo);
 }
 

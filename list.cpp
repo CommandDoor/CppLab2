@@ -7,24 +7,6 @@
 using namespace std;
 
 
-int List::maxRelease()
-{
-    int returnValue = -1;
-
-    for (int i = 0; i < length; i++)
-    {
-        if (i == 0)
-        {
-            returnValue = source[i].release;
-        }else
-        {
-            if (returnValue < source[i].release) returnValue = source[i].release;
-        }
-    }
-
-    return returnValue;
-}
-
 List::List()
 {
     maxLength = 0;
@@ -39,41 +21,17 @@ List::List(int newMaxLength)
     source = new Row[newMaxLength];
 }
 
-List* List::Search(Row *value, bool equal)
+Row* List::operator()(Row *value)
 {
-    List *returnValue = new List(maxLength);
-
     for (int i = 0; i < length; i++)
     {
-        if (equal)
-        {
-            if (source[i].key == value->key)
-            {
-                if (value->release > 0)
-                {
-                    if (source[i].release == value->release) returnValue->Add(&source[i]);
-                }else
-                {
-                    returnValue->Add(&source[i]);
-                }
-            }
-        }else
-        {
-            if (source[i].key != value->key)
-            {
-                returnValue->Add(&source[i]);
-            } else
-            {
-                if (value->release > 0 && source[i].release != value->release)
-                    returnValue->Add(&source[i]);
-            }
-        }
+        if (source[i].key == value->key) return &source[i];
     }
 
-    return returnValue;
+    return NULL;
 }
 
-const char* List::Add(Row *value, bool recalculateRelease)
+const char* List::operator+=(Row *value )
 {
     if (length == maxLength)
         return "Maximum reached!";
@@ -89,56 +47,17 @@ const char* List::Add(Row *value, bool recalculateRelease)
     return "";
 }
 
-
-const char* List::Delete( Row *rowSearch )
+const char* List::operator-=( int key )
 {
-    List* excludedList = Search(rowSearch, false);
-
-    if (excludedList->length == length)
-        return "No elements found!";
-
-    source = excludedList->source;
-    length = excludedList->length;
-
-    Sort();
-
-    return "";
+    return "Delete(new Row(key))";
 }
 
-
-const char* List::Delete( int key )
+ostream List::operator <<(List *list)
 {
-    return Delete(new Row(key));
-}
-
-
-const char* List::Delete( int key, int release )
-{
-    return Delete(new Row(key, release));
-}
-
-void List::Sort()
-{
-    if (length < 2) return;
-    Row tmp;
-
-    for (int i = 0; i < length-1; i++)
-    {
-        if (source[i].key > source[i+1].key)
-        {
-            tmp = source[i];
-            source[i] = source[i+1];
-            source[i+1] = tmp;
-        }
-    }
-}
-
-const char* List::Print()
-{
-    cout<<"Key"<<"\t"<<"Release"<<"\t"<<"Information"<<endl;
+    cout<<"Key"<<"\t"<<"\t"<<"Information"<<endl;
     for (int i = 0; i < length; i++)
     {
-        cout<<source[i].key<<"\t"<<source[i].release<<"\t"<<source[i].getInfo()<<endl;
+        cout<<source[i].key<<"\t"<<"\t"<<source[i].getInfo()<<endl;
     }
 
     return "";
