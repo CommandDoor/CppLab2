@@ -1,40 +1,37 @@
 #include "row.h"
 #include <string.h>
 #include <conio.h>
-
+#include <iostream>
+#include <ioOperations.h>
 using namespace std;
 
-void Row::setInfo(char* value)
-{
-    info = value;
-    infoLength = strlen(info);
-}
-
-char* Row::getInfo()
-{
-    return info;
-}
-
+#include <stdlib.h>
 
 Row::Row()
 {
+    isOccupied = 0;
     key = 0;
     info = NULL;
 }
 
-Row::Row( int newKey )
-{
-    key = newKey;
-    setInfo(NULL);
-}
-
-Row::Row( int newKey, char* newInfo)
-{
-    key = newKey;
-    setInfo(newInfo);
-}
-
-void Row::Clear()
+Row::~Row()
 {
     delete [] info;
+}
+
+ostream& operator <<(ostream &out, Row *row)
+{
+    out<<row->isOccupied<<"\t"<<row->key<<"\t"<<row->info<<endl;
+    return out;
+}
+
+istream& operator >>(istream &in, Row *&row)
+{
+    cout<< "Enter key: ";
+    ioOperations::input(row->key);
+
+    cout<< "Enter info: ";
+    ioOperations::input(row->info);
+
+    return in;
 }

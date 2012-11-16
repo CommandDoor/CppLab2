@@ -1,5 +1,9 @@
 #ifndef ROW_H
 #define ROW_H
+#include <iostream>
+#include <string.h>
+#include <conio.h>
+using namespace std;
 
 class Row
 {
@@ -7,24 +11,17 @@ class Row
 private:
 
 protected:
-    char* info;
-    int infoLength;
 
 public:
+    int isOccupied;
     int key;
-    int busy;
-
-    void setInfo(char* value);
-
-    char* getInfo();
+    char* info;
 
     Row();
+    ~Row();
 
-    Row( int newKey );
-
-    Row( int newKey, char* newInfo);
-
-    void Clear();
+    friend std::ostream& operator <<(std::ostream &out, Row *row);
+    friend std::istream& operator >>(std::istream &in, Row *&row);
 };
 
 #endif // ROW_H

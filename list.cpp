@@ -2,7 +2,7 @@
 #include <conio.h>
 #include <iostream>
 #include "list.h"
-#include <row.h>
+#include "row.h"
 
 using namespace std;
 
@@ -21,14 +21,12 @@ List::List(int newMaxLength)
     source = new Row[newMaxLength];
 }
 
-Row* List::operator()(Row *value)
+List::~List()
 {
     for (int i = 0; i < length; i++)
-    {
-        if (source[i].key == value->key) return &source[i];
-    }
+        source[i].~Row();
 
-    return NULL;
+    length = 0;
 }
 
 const char* List::operator+=(Row *value )
@@ -36,41 +34,55 @@ const char* List::operator+=(Row *value )
     if (length == maxLength)
         return "Maximum reached!";
 
-    if (Search(value)->length > 0)
+    if (operator()((const char*)"key", value->key)!= NULL)
+    {
         return "Row is already consists!";
-
-    source[length] = *value;
-    length++;
-
-    Sort();
+    }
+    else if ( length < maxLength )
+    {
+        value->isOccupied = 1;
+        source[length] = *value;
+        length++;
+    }
+    else
+    {
+    }
 
     return "";
 }
 
 const char* List::operator-=( int key )
 {
-    return "Delete(new Row(key))";
-}
+    Row* searchRow = operator()((const char*)"key", key);
+    if (searchRow == NULL)
+        return "No elements found";
 
-ostream List::operator <<(List *list)
-{
-    cout<<"Key"<<"\t"<<"\t"<<"Information"<<endl;
-    for (int i = 0; i < length; i++)
-    {
-        cout<<source[i].key<<"\t"<<"\t"<<source[i].getInfo()<<endl;
-    }
-
+    //Удаляем и записываем на его место последний элемент.
+    searchRow->key = source[length-1].key;
+    searchRow->info = source[length-1].info;
+    source[length-1].isOccupied = 0;
+    length--;
     return "";
 }
 
-const char* List::Clear()
+Row* List::operator()(const char* propertyName, int value)
 {
     for (int i = 0; i < length; i++)
     {
-        source[i].Clear();
+        if (*propertyName == *(const char*)"key")
+            if (source[i].key == value) return &source[i];
+        if (*propertyName == *(const char*)"isOccupied")
+            if (source[i].isOccupied == value) return &source[i];
+
     }
+    return NULL;
+}
 
-    length = 0;
+ostream& operator<<(ostream &out, List &list)
+{
+    out<<"isBusy"<<"\t"<<"Key"<<"\t"<<"Information"<<endl;
+    for (int i = 0; i < list.length; i++)
+        out<<&list.source[i];
 
-    return "";
+    return out;
 }
