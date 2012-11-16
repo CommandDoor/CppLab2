@@ -18,12 +18,15 @@ List::List(int newMaxLength)
 {
     maxLength = newMaxLength;
     length = 0;
+
     source = new Row[newMaxLength];
+    for (int i = 0; i < maxLength; i++)
+        source[i] = *(new Row());
 }
 
 List::~List()
 {
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < maxLength; i++)
         source[i].~Row();
 
     length = 0;
@@ -40,8 +43,10 @@ const char* List::operator+=(Row *value )
     }
     else if ( length < maxLength )
     {
-        value->isOccupied = 1;
-        source[length] = *value;
+        Row* searchRow = operator ()((const char*)"isOccupied", 0);
+        searchRow->isOccupied = 1;
+        searchRow->key = value->key;
+        searchRow->info = value->info;
         length++;
     }
     else
@@ -58,16 +63,18 @@ const char* List::operator-=( int key )
         return "No elements found";
 
     //Удаляем и записываем на его место последний элемент.
-    searchRow->key = source[length-1].key;
-    searchRow->info = source[length-1].info;
-    source[length-1].isOccupied = 0;
+//    searchRow->key = source[length-1].key;
+//    searchRow->info = source[length-1].info;
+//    source[length-1].isOccupied = 0;
+
+    searchRow->isOccupied = 0;
     length--;
     return "";
 }
 
 Row* List::operator()(const char* propertyName, int value)
 {
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < maxLength; i++)
     {
         if (*propertyName == *(const char*)"key")
             if (source[i].key == value) return &source[i];
@@ -81,7 +88,7 @@ Row* List::operator()(const char* propertyName, int value)
 ostream& operator<<(ostream &out, List &list)
 {
     out<<"isBusy"<<"\t"<<"Key"<<"\t"<<"Information"<<endl;
-    for (int i = 0; i < list.length; i++)
+    for (int i = 0; i < list.maxLength; i++)
         out<<&list.source[i];
 
     return out;

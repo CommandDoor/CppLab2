@@ -38,11 +38,6 @@ const char* AddMenuClick(List *list)
 {
     Row* newRow = new Row();
     cin>>newRow;
-    cout<<newRow;
-
-//    list->source[0] = *newRow;
-//    list->length = 1;
-//    cout<<*list;
     return (*list+=newRow);
 }
 

@@ -21,7 +21,10 @@ Row::~Row()
 
 ostream& operator <<(ostream &out, Row *row)
 {
-    out<<row->isOccupied<<"\t"<<row->key<<"\t"<<row->info<<endl;
+    if (row->isOccupied == 1)
+        out<<row->isOccupied<<"\t"<<row->key<<"\t"<<row->info<<endl;
+    else
+        out<<"0\t0"<<endl;
     return out;
 }
 
